@@ -61,9 +61,9 @@ bot.dialog('Question', [
 ]
 
 ).triggerAction({
-    matches: 'SearchHotels',
+    matches: 'Question',
     onInterrupted: function (session) {
-        session.send('Please provide a destination');
+        session.send('This is it');
     }
 });
 
