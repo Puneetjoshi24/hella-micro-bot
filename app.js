@@ -26,7 +26,7 @@ var tableStorage = new botbuilder_azure.AzureBotStorage({ gzipData: false }, azu
 
 // Create your bot with a function to receive messages from the user
 var bot = new builder.UniversalBot(connector, function (session) {
-    session.send('Sorry, I did not understand \'%s\'. Type \'help\' if you need assistance.', session.message.text);
+    session.send('Welcome to profiling bot ..! I am hella... Type \'help\' if you need assistance.', session.message.text);
 });
 bot.set('storage', tableStorage);
 
@@ -44,7 +44,7 @@ bot.recognizer(recognizer);
 
 bot.dialog('Question', [
     function(session, args, next){
-        session.send("Welcome to profiling bot ..! I am hella and I am Puneet's assistent..! Ask me about him ", session.message.text);
+        session.send("I am Puneet's assistent..! Ask me about him ", session.message.text);
         session.send("By the way, He is AWESOME",session.message.text);
 
         var name = builder.EntityRecognizer.findEntity(args.intent.entities, 'name');
