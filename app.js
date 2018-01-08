@@ -24,11 +24,7 @@ var tableName = 'botdata';
 var azureTableClient = new botbuilder_azure.AzureTableClient(tableName, process.env['AzureWebJobsStorage']);
 var tableStorage = new botbuilder_azure.AzureBotStorage({ gzipData: false }, azureTableClient);
 
-// Create your bot with a function to receive messages from the user
-var bot = new builder.UniversalBot(connector, function (session) {
-    session.send('Welcome to profiling bot ..! I am hella... Type \'help\' if you need assistance.', session.message.text);
-});
-bot.set('storage', tableStorage);
+
 
 // Make sure you add code to validate these fields
 var luisAppId = process.env.LuisAppId;
@@ -37,56 +33,62 @@ var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.micro
 
 const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
 
+// Create your bot with a function to receive messages from the user
+var bot = new builder.UniversalBot(connector, function (session) {
+    session.send('Welcome to profiling bot ..! I am hella... Type \'help\' if you need assistance.', session.message.text);
+});
+bot.set('storage', tableStorage);
+
 // Main dialog with LUIS
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 
 bot.recognizer(recognizer);
 
-bot.dialog('Question', [
-    function(session, args, next){
-        session.send("I am Puneet's assistent..! Ask me about him ", session.message.text);
-        session.send("By the way, He is AWESOME",session.message.text);
+// bot.dialog('Question', [
+//     function(session, args, next){
+//         session.send("I am Puneet's assistent..! Ask me about him ", session.message.text);
+//         session.send("By the way, He is AWESOME",session.message.text);
 
-        var name = builder.EntityRecognizer.findEntity(args.intent.entities, 'name');
-        console.log("Name: ",name);
-        if(name){
-            console.log(":)"+name.entity);``
-            next({ response: name.entity });
-        }
-        else {
-            builder.Prompts.text(session, 'I didnot recognize him ');
-            next({ response: session.message.text });
-        }
-    }
-]
+//         var name = builder.EntityRecognizer.findEntity(args.intent.entities, 'name');
+//         console.log("Name: ",name);
+//         if(name){
+//             console.log(":)"+name.entity);``
+//             next({ response: name.entity });
+//         }
+//         else {
+//             builder.Prompts.text(session, 'I didnot recognize him ');
+//             next({ response: session.message.text });
+//         }
+//     }
+// ]
 
-).triggerAction({
-    matches: 'Question',
-    onInterrupted: function (session) {
-        session.send('This is it');
-    }
-});
+// ).triggerAction({
+//     matches: 'Question',
+//     onInterrupted: function (session) {
+//         session.send('This is it');
+//     }
+// });
 
 
-// var intents = new builder.IntentDialog({ recognizers: [recognizer] })
-// .matches('Greeting', (session) => {
+var intents = new builder.IntentDialog({ recognizers: [recognizer] })
+.matches('Greeting', (session) => {
 
     
 
-//     session.send('You reached Greeting intent, you said \'%s\'.', session.message.text);
-// })
-// .matches('Help', (session) => {
-//     session.send('You reached Help intent, you said \'%s\'.', session.message.text);
-// })
-// .matches('Cancel', (session) => {
-//     session.send('You reached Cancel intent, you said \'%s\'.', session.message.text);
-// })
-// /*
-// .matches('<yourIntent>')... See details at http://docs.botframework.com/builder/node/guides/understanding-natural-language/
-// */
-// .onDefault((session) => {
-//     session.send('Sorry, I did not understand \'%s\'.', session.message.text);
-// });
+    session.send('You reached Greeting intent, you said \'%s\'.', session.message.text);
+})
+.matches('Help', (session) => {
+    session.send('You reached Help intent, you said \'%s\'.', session.message.text);
+})
+.matches('Cancel', (session) => {
+    session.send('You reached Cancel intent, you said \'%s\'.', session.message.text);
+})
+/*
+.matches('<yourIntent>')... See details at http://docs.botframework.com/builder/node/guides/understanding-natural-language/
+*/
+.onDefault((session) => {
+    session.send('Sorry, I did not understand \'%s\'.', session.message.text);
+});
 
 bot.dialog('Help', function (session) {
     session.endDialog('Hi! Try asking me things like \'Who is Puneet\'');
@@ -94,5 +96,4 @@ bot.dialog('Help', function (session) {
     matches: 'Help'
 });
 
-//bot.dialog('/', intents);    
-
+bot.dialog('/', intents);    
