@@ -1,4 +1,3 @@
-
 var restify = require('restify');
 var builder = require('botbuilder');
 var botbuilder_azure = require("botbuilder-azure");
@@ -11,70 +10,41 @@ server.listen(process.env.port || process.env.PORT || 3978, function () {
   
 // Create chat connector for communicating with the Bot Framework Service
 var connector = new builder.ChatConnector({
-    appId: process.env.MicrosoftAppId,
-    appPassword: process.env.MicrosoftAppPassword,
+    appId: "80b77a64-a921-4c8e-a1e3-bd9e6c7d5dc6",
+    appPassword: "bl9T*_5^WUGfMp%5",
     openIdMetadata: process.env.BotOpenIdMetadata 
 });
 
 // Listen for messages from users 
 server.post('/api/messages', connector.listen());
 
+/*----------------------------------------------------------------------------------------
+* Bot Storage: This is a great spot to register the private state storage for your bot. 
+* We provide adapters for Azure Table, CosmosDb, SQL Azure, or you can implement your own!
+* For samples and documentation, see: https://github.com/Microsoft/BotBuilder-Azure
+* ---------------------------------------------------------------------------------------- */
 
 var tableName = 'botdata';
 var azureTableClient = new botbuilder_azure.AzureTableClient(tableName, process.env['AzureWebJobsStorage']);
 var tableStorage = new botbuilder_azure.AzureBotStorage({ gzipData: false }, azureTableClient);
 
-
+// Create your bot with a function to receive messages from the user
+var bot = new builder.UniversalBot(connector);
+bot.set('storage', tableStorage);
 
 // Make sure you add code to validate these fields
 var luisAppId = process.env.LuisAppId;
 var luisAPIKey = process.env.LuisAPIKey;
 var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
 
-const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
+//const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
 
-// Create your bot with a function to receive messages from the user
-var bot = new builder.UniversalBot(connector, function (session) {
-    session.send('Welcome to profiling bot ..! I am hella... Type \'help\' if you need assistance.', session.message.text);
-});
-bot.set('storage', tableStorage);
+const LuisModelUrl = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/a721c73b-7ba9-4151-98c1-c6e661039d7e?subscription-key=2292c132d32e488493e23929095e7b57&verbose=true&timezoneOffset=0&q=";
 
 // Main dialog with LUIS
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
-
-bot.recognizer(recognizer);
-
-// bot.dialog('Question', [
-//     function(session, args, next){
-//         session.send("I am Puneet's assistent..! Ask me about him ", session.message.text);
-//         session.send("By the way, He is AWESOME",session.message.text);
-
-//         var name = builder.EntityRecognizer.findEntity(args.intent.entities, 'name');
-//         console.log("Name: ",name);
-//         if(name){
-//             console.log(":)"+name.entity);``
-//             next({ response: name.entity });
-//         }
-//         else {
-//             builder.Prompts.text(session, 'I didnot recognize him ');
-//             next({ response: session.message.text });
-//         }
-//     }
-// ]
-
-// ).triggerAction({
-//     matches: 'Question',
-//     onInterrupted: function (session) {
-//         session.send('This is it');
-//     }
-// });
-
-
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 .matches('Greeting', (session) => {
-
-    
-
     session.send('You reached Greeting intent, you said \'%s\'.', session.message.text);
 })
 .matches('Help', (session) => {
@@ -88,12 +58,6 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 */
 .onDefault((session) => {
     session.send('Sorry, I did not understand \'%s\'.', session.message.text);
-});
-
-bot.dialog('Help', function (session) {
-    session.endDialog('Hi! Try asking me things like \'Who is Puneet\'');
-}).triggerAction({
-    matches: 'Help'
 });
 
 bot.dialog('/', intents);    
