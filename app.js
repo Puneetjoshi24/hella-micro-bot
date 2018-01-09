@@ -45,7 +45,7 @@ const LuisModelUrl = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 .matches('Greeting', (session, args, next) => {
-    session.send('You reached Greeting intent hahaha, you said \'%s\'.', session.message.text);
+    session.send("Hello there. Hella this side...! I am Puneet's assistant. Try asking me things about him. Btw he is just awesome", session.message.text);
 })
 .matches('Help', (session, args, next) => {
     session.send('You reached Help intent, you said \'%s\'.', session.message.text);
