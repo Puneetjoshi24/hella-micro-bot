@@ -44,18 +44,34 @@ const LuisModelUrl = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/
 // Main dialog with LUIS
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
-.matches('Question', (session) => {
-    session.send('You reached Question intent, you said \'%s\'.', session.message.text);
-})
-.matches('Greeting', (session) => {
+.matches('Greeting', (session, args, next) => {
     session.send('You reached Greeting intent hahaha, you said \'%s\'.', session.message.text);
 })
-.matches('Help', (session) => {
+.matches('Help', (session, args, next) => {
     session.send('You reached Help intent, you said \'%s\'.', session.message.text);
 })
-.matches('Cancel', (session) => {
+.matches('Cancel', (session, args, next) => {
     session.send('You reached Cancel intent, you said \'%s\'.', session.message.text);
 })
+.matches('Technical Info', (session, args, next) => {
+    session.send('You reached Technical Info intent, you said \'%s\'.', session.message.text);
+})
+.matches('Personal', (session, args, next) => {
+    session.send('You reached Personal intent, you said \'%s\'.', session.message.text);
+})
+.matches('Interest', (session, args, next) => {
+    session.send('You reached Interest intent, you said \'%s\'.', session.message.text);
+})
+.matches('Profession', (session, args, next) => {
+    session.send('You reached Profession intent, you said \'%s\'.', session.message.text);
+})
+.matches('Relationship', (session, args, next) => {
+    session.send('You reached Relationship intent, you said \'%s\'.', session.message.text);
+})
+.matches('Introduction', (session, args, next) => {
+    session.send('You reached Introduction intent, you said \'%s\'.', session.message.text);
+})
+
 /*
 .matches('<yourIntent>')... See details at http://docs.botframework.com/builder/node/guides/understanding-natural-language/
 */
