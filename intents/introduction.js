@@ -7,8 +7,8 @@ var nameEntity;
         if (nameEntity.entity == "Puneet") {
             return next({ response: "yes" });
         } else {
-            builder.Prompts.text(session, 'I know only about Puneet Joshi. You wanted to know about him ? Yes or No');
-            next({ response: session.message.text });
+            builder.Prompts.choice(session, 'I know only about Puneet Joshi. You wanted to know about him ? Yes or No');
+            //next({ response: session.message.text });
         }
     }
 
@@ -16,8 +16,8 @@ var nameEntity;
         var res=results.response.entity||results.response;
         if(res=="yes"){
             session.send("Puneet Joshi is an engineer at Asksid.ai now. He is a full stack developer. He is from Uttarakhand. He lives in Bangalore now. He is football freak. And he is a fun guy to be with.");
-            builder.Prompts.text(session, 'Want to know more about him ? Yes or No');
-            next({ response: session.message.text });
+            builder.Prompts.choice(session, 'Want to know more about him ? Yes or No');
+            //next({ response: session.message.text });
         }
         else{
             session.send("So I cannot help you then. I only know about him. Bye bye...!");
