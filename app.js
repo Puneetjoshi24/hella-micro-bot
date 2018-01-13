@@ -84,4 +84,4 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     session.send('Sorry, I did not understand \'%s\'. I am not as smart as you', session.message.text);
 });
 
-bot.dialog('/', intents);    ``
+bot.dialog('/', intents);
