@@ -1,6 +1,7 @@
 var restify = require('restify');
 var builder = require('botbuilder');
 var botbuilder_azure = require("botbuilder-azure");
+var introduction = require('./intents/introduction');
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -33,25 +34,27 @@ var bot = new builder.UniversalBot(connector);
 bot.set('storage', tableStorage);
 
 // Make sure you add code to validate these fields
-var luisAppId = process.env.LuisAppId;
-var luisAPIKey = process.env.LuisAPIKey;
-var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
+//var luisAppId = process.env.LuisAppId;
+//var luisAPIKey = process.env.LuisAPIKey;
+//var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
 
 //const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
 
 const LuisModelUrl = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/a721c73b-7ba9-4151-98c1-c6e661039d7e?subscription-key=2292c132d32e488493e23929095e7b57&verbose=true&timezoneOffset=0&q=";
 
+console.log("Here....")
 // Main dialog with LUIS
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
+
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 .matches('Greeting', (session, args, next) => {
     session.send("Hello there. Hella this side...! I am Puneet's assistant. Try asking me things about him. Btw he is just awesome", session.message.text);
 })
 .matches('Help', (session, args, next) => {
-    session.send('You reached Help intent, you said \'%s\'.', session.message.text);
+    session.send("Try asking me questions like 'What is Puneet's profession ' I can answer about him", session.message.text);
 })
 .matches('Cancel', (session, args, next) => {
-    session.send('You reached Cancel intent, you said \'%s\'.', session.message.text);
+    session.send('Ok I am cancelling everything.', session.message.text);
 })
 .matches('Technical Info', (session, args, next) => {
     session.send('You reached Technical Info intent, you said \'%s\'.', session.message.text);
@@ -68,15 +71,17 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 .matches('Relationship', (session, args, next) => {
     session.send('You reached Relationship intent, you said \'%s\'.', session.message.text);
 })
-.matches('Introduction', (session, args, next) => {
-    session.send('You reached Introduction intent, you said \'%s\'.', session.message.text);
-})
+.matches('Introduction', [
+    function (session, args, next) { introduction.introduceName(session, args, next) },
+    function (session, results, next) { introduction.introduceYou(session, results, next) },
+    function (session, results) { introduction.introduceYouMore(session, results) }
+])
 
 /*
 .matches('<yourIntent>')... See details at http://docs.botframework.com/builder/node/guides/understanding-natural-language/
 */
 .onDefault((session) => {
-    session.send('Sorry, I did not understand \'%s\'.', session.message.text);
+    session.send('Sorry, I did not understand \'%s\'. I am not as smart as you', session.message.text);
 });
 
-bot.dialog('/', intents);    
+bot.dialog('/', intents);    ``
