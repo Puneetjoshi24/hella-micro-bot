@@ -7,8 +7,8 @@ var nameEntity;
         if (nameEntity.entity == "Puneet") {
             return next({ response: "yes" });
         } else {
-            builder.Prompts.text(session, 'I know only about Puneet Joshi. You wanted to know about him ? Yes or No');
-            next({ response: session.message.text });
+            builder.Prompts.choice(session, 'I know only about Puneet Joshi. You wanted to know about him ? Yes or No');
+            //next({ response: session.message.text });
         }
     }
 
