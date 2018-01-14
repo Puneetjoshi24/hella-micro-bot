@@ -58,9 +58,9 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     session.send('Ok I am cancelling everything.', session.message.text);
 })
 .matches('Technical Info', [
-    function (session, args, next) { introduction.languageInfo(session, args, next) },
-    function (session, results, next) { introduction.techInfo(session, results, next) },
-    function (session, results) { introduction.blockchaininfo(session, results) }
+    function (session, args, next) { technicalInfo.languageInfo(session, args, next) },
+    function (session, results, next) { technicalInfo.techInfo(session, results, next) },
+    function (session, results) { technicalInfo.blockchaininfo(session, results) }
 ])
 .matches('Personal', (session, args, next) => {
     session.send('You reached Personal intent, you said \'%s\'.', session.message.text);
