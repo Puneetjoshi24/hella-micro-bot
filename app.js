@@ -3,6 +3,11 @@ var builder = require('botbuilder');
 var botbuilder_azure = require("botbuilder-azure");
 var introduction = require('./intents/introduction');
 var technicalInfo = require('./intents/technical-info');
+var relationship = require('./intents/relationship');
+var profession = require('./intents/profession');
+var personal = require('./intents/personal');
+var interest = require('./intents/interest');
+
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -52,7 +57,7 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     session.send("Hello there. Hella this side...! I am Puneet's assistant. Try asking me things about him. Btw he is just awesome", session.message.text);
 })
 .matches('Help', (session, args, next) => {
-    session.send("Try asking me questions like 'What is Puneet's profession ' I can answer about him", session.message.text);
+    session.send("Try asking me questions like 'What is Puneet's profession ' I can answer that about him", session.message.text);
 })
 .matches('Cancel', (session, args, next) => {
     session.send('Ok I am cancelling everything.', session.message.text);
@@ -62,18 +67,22 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     function (session, results, next) { technicalInfo.techInfo(session, results, next) },
     function (session, results) { technicalInfo.blockchaininfo(session, results) }
 ])
-.matches('Personal', (session, args, next) => {
-    session.send('You reached Personal intent, you said \'%s\'.', session.message.text);
-})
-.matches('Interest', (session, args, next) => {
-    session.send('You reached Interest intent, you said \'%s\'.', session.message.text);
-})
-.matches('Profession', (session, args, next) => {
-    session.send('You reached Profession intent, you said \'%s\'.', session.message.text);
-})
-.matches('Relationship', (session, args, next) => {
-    session.send('You reached Relationship intent, you said \'%s\'.', session.message.text);
-})
+.matches('Personal', [
+    function (session, args, next) { personal.personalInfo(session, args, next) }
+])
+.matches('Interest', [
+    function (session, args, next) { interest.interestInfo(session, args, next) },
+    function (session, results, next) { interest.sportsInfo(session, results, next) },
+    function (session, results) { interest.tvSeriesInfo(session, results, next) },
+    function (session, results) { interest.moviesInfo(session, results) }
+])
+.matches('Profession', [
+    function (session, args, next) { profession.professionInfo(session, args, next) },
+    function (session, results) { profession.professionInfoMore(session, results) }
+])
+.matches('Relationship', [
+    function (session, args, next) { relationship.relationshipInfo(session, args, next) }
+])
 .matches('Introduction', [
     function (session, args, next) { introduction.introduceName(session, args, next) },
     function (session, results, next) { introduction.introduceYou(session, results, next) },
