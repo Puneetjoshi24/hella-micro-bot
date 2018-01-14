@@ -11,6 +11,9 @@ var professionEntity;
                 session.send("Puneet is professionally a Software Engineer. He is graduated engineer from G.B. Pant Engineering College.");
                 builder.Prompts.text(session, 'Want to know more about his job ? Yes or No');
             }
+            else{
+                session.send("He is just a software engineer.");
+            }
         } else {
                 session.send("I cannot tell you more personal things. He has told not to tell.");
         }

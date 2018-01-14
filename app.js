@@ -93,7 +93,7 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 .matches('<yourIntent>')... See details at http://docs.botframework.com/builder/node/guides/understanding-natural-language/
 */
 .onDefault((session) => {
-    session.send('Sorry, I did not understand \'%s\'. I am not as smart as you', session.message.text);
+    session.send('Sorry, I did not understand \'%s\'. I am not as smart as you. Try asking me questions about Puneet', session.message.text);
 });
 
 bot.dialog('/', intents);
