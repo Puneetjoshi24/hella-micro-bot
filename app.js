@@ -2,6 +2,7 @@ var restify = require('restify');
 var builder = require('botbuilder');
 var botbuilder_azure = require("botbuilder-azure");
 var introduction = require('./intents/introduction');
+var technicalInfo = require('./intents/technical-info');
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -56,9 +57,11 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 .matches('Cancel', (session, args, next) => {
     session.send('Ok I am cancelling everything.', session.message.text);
 })
-.matches('Technical Info', (session, args, next) => {
-    session.send('You reached Technical Info intent, you said \'%s\'.', session.message.text);
-})
+.matches('Technical Info', [
+    function (session, args, next) { introduction.languageInfo(session, args, next) },
+    function (session, results, next) { introduction.techInfo(session, results, next) },
+    function (session, results) { introduction.blockchaininfo(session, results) }
+])
 .matches('Personal', (session, args, next) => {
     session.send('You reached Personal intent, you said \'%s\'.', session.message.text);
 })
