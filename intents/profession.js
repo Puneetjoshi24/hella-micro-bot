@@ -28,6 +28,6 @@ var professionEntity;
     }
 
     module.exports={
-        personalInfo:personalInfo,
+        professionInfo:professionInfo,
         professionInfoMore:professionInfoMore
     }
