@@ -10,6 +10,9 @@ var relationshipStatusEntity;
             if(relationshipStatusEntity){
                 session.send("Puneet is totally Single and unvailable. He is committed to me. :) ");
             }
+            else{
+                session.send("What do you want to know about Puneet;s relation? I know only about his current relationship status");
+            }
         } else {
             session.send("What do you want to know about Puneet;s relation? I know only about his current relationship status");
         }
